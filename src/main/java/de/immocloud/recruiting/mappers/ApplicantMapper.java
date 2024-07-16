@@ -2,25 +2,21 @@ package de.immocloud.recruiting.mappers;
 
 import de.immocloud.recruiting.jpa.repositories.models.Applicant;
 import de.immocloud.recruiting.web.rest.dtos.ApplicantDto;
-import de.immocloud.recruiting.web.rest.dtos.StoreApplicantDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import de.immocloud.recruiting.web.rest.dtos.ApplicantCreateDto;
+import de.immocloud.recruiting.web.rest.dtos.ApplicantPatchDto;
+import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ApplicantMapper {
     ApplicantDto modelToDto(Applicant applicant);
 
     @Mapping(target = "id", ignore = true)
-    Applicant dtoToModel(StoreApplicantDto storeApplicantDto);
+    Applicant dtoToModel(ApplicantCreateDto applicantCreateDto);
 
     List<ApplicantDto> modelsToDtos(List<Applicant> applicants);
 
-    List<Applicant> dtosToModels(List<ApplicantDto> applicantDtos);
-
     @Mapping(target = "id", ignore = true)
-    Applicant update(@MappingTarget Applicant applicant, StoreApplicantDto applicantDto);
+    Applicant patch(@MappingTarget Applicant applicant, ApplicantPatchDto applicantDto);
 }

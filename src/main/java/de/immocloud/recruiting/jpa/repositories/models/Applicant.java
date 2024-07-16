@@ -3,7 +3,9 @@ package de.immocloud.recruiting.jpa.repositories.models;
 import de.immocloud.recruiting.jpa.repositories.models.enums.ApplicantStatus;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class Applicant {
     private @Id ObjectId id;
     private String name;

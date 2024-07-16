@@ -1,9 +1,12 @@
 package de.immocloud.recruiting.web.rest.controllers;
 
 import de.immocloud.recruiting.exceptions.ApplicantNotFoundException;
+import de.immocloud.recruiting.jpa.repositories.models.enums.ApplicantStatus;
+import de.immocloud.recruiting.web.rest.dtos.ApplicantCreateDto;
 import de.immocloud.recruiting.web.rest.dtos.ApplicantDto;
 import de.immocloud.recruiting.services.ApplicantService;
-import de.immocloud.recruiting.web.rest.dtos.StoreApplicantDto;
+import de.immocloud.recruiting.web.rest.dtos.ApplicantPatchDto;
+import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,29 +22,18 @@ public class ApplicantController {
     private ApplicantService applicantService;
 
     @GetMapping
-    public List<ApplicantDto> getAllApplicants() {
-        return applicantService.getAllApplicants();
-    }
-
-    @GetMapping("/{id}")
-    public ApplicantDto getApplicantById(@PathVariable String id) {
-        ApplicantDto applicant = applicantService.getApplicantById(new ObjectId(id));
-        return applicant;
+    public List<ApplicantDto> findApplicants(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false) ApplicantStatus status) {
+        return applicantService.findApplicants(name, status);
     }
 
     @PostMapping
-    public ApplicantDto createApplicant(@RequestBody StoreApplicantDto applicant) {
+    public ApplicantDto createApplicant(@RequestBody @Valid ApplicantCreateDto applicant) {
         return applicantService.createApplicant(applicant);
     }
 
-    @PutMapping("/{id}")
-    public ApplicantDto updateApplicant(@PathVariable String id, @RequestBody StoreApplicantDto storeApplicantDto) {
-        return applicantService.updateApplicant(new ObjectId(id), storeApplicantDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteApplicant(@PathVariable String id) {
-        applicantService.deleteApplicant(new ObjectId(id));
+    @PatchMapping("/{id}")
+    public ApplicantDto patchApplicant(@PathVariable String id, @RequestBody ApplicantPatchDto applicantPatchDto) {
+        return applicantService.patchApplicant(new ObjectId(id), applicantPatchDto);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
