@@ -9,5 +9,24 @@ services:
       - 27017:27017
     volumes:
       - .mongodata:/data/db
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  recruiting-backend:
+    image: recruiting-backend
+    container_name: recruiting-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/recruiting
+
 volumes:
   mongodata:
